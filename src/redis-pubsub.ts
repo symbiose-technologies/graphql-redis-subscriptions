@@ -1,6 +1,8 @@
 import {Cluster, Redis, RedisOptions} from 'ioredis';
 import {PubSubEngine} from 'graphql-subscriptions';
 import {PubSubAsyncIterator} from './pubsub-async-iterator';
+// import { Deserializer, Serializer } from "v8";
+// const { Deserializer, Serializer } = require("v8");
 
 type RedisClient = Redis | Cluster;
 type OnMessage<T> = (message: T) => void;
@@ -125,7 +127,11 @@ export class RedisPubSub implements PubSubEngine {
     const [triggerName = null] = this.subscriptionMap[subId] || [];
     const refs = this.subsRefsMap.get(triggerName);
 
-    if (!refs) throw new Error(`There is no subscription of id "${subId}"`);
+    // if (!refs) throw new Error(`There is no subscription of id "${subId}"`);
+    if (!refs) {
+      console.error(`There is no subscription of id: ${subId}`)
+      return
+    }
 
     if (refs.size === 1) {
       // unsubscribe from specific channel and pattern match
@@ -172,7 +178,7 @@ export class RedisPubSub implements PubSubEngine {
   private onMessage(pattern: string, channel: string, message: string) {
     const subscribers = this.subsRefsMap.get(pattern || channel);
 
-    // Don't work for nothing..
+    // Don't work for nothing.
     if (!subscribers?.size) return;
 
     let parsedMessage;
