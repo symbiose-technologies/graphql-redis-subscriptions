@@ -13,6 +13,12 @@
     "declaration": true,
     "lib": ["es6","esnext"]
   },
+  "include": [
+    "src/index.ts",
+    "src/pubsub-async-iterator.ts",
+    "src/redis-pubsub.ts",
+    "src/with-filter.ts",
+  ],
   "exclude": [
     "node_modules",
     "src/test",
